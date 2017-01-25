@@ -15,7 +15,7 @@ RUN export HOMEBREW_FORCE_VENDOR_RUBY=1 && \
     git clone --depth=1 https://github.com/Linuxbrew/brew /home/linuxbrew/.linuxbrew && \
     /home/linuxbrew/.linuxbrew/bin/brew analytics off && \
     /home/linuxbrew/.linuxbrew/bin/brew tap homebrew/core && \
-    /home/linuxbrew/.linuxbrew/bin/brew tap homebrew/portable && \
+    /home/linuxbrew/.linuxbrew/bin/brew tap alyssais/portable && \
     ln -s $(which gcc) /home/linuxbrew/.linuxbrew/bin/gcc-$(gcc -dumpversion|cut -d. -f1,2) && \
     ln -s $(which g++) /home/linuxbrew/.linuxbrew/bin/g++-$(g++ -dumpversion|cut -d. -f1,2) && \
     chown -R linuxbrew:linuxbrew /home/linuxbrew/.linuxbrew

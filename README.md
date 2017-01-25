@@ -2,7 +2,7 @@
 Formulae and tools to build versions of Ruby, Git and Curl that can be installed and run from anywhere on the filesystem.
 
 ## How do I install these formulae?
-Just `brew install homebrew/portable/<formula>`.
+Just `brew install alyssais/portable/<formula>`.
 
 ## How do I build packages for these formulae?
 ### OS X
