@@ -6,15 +6,20 @@ class PortableGit < PortableFormula
   url "https://www.kernel.org/pub/software/scm/git/git-2.8.2.tar.xz"
   sha256 "ec0283d78a0f1c8408c5fd43610697b953fbaafe4077bb1e41446a9ee3a2f83d"
 
+  depends_on "zlib" => :build unless OS.mac?
   depends_on "portable-curl" => :build
   depends_on "portable-expat" => :build if OS.linux?
 
   def install
+    zlib = Formula["zlib"]
     curl = Formula["portable-curl"]
     expat = Formula["portable-expat"]
 
     ENV.append "LDFLAGS", "-Wl,-search_paths_first"
     ENV.universal_binary if build.with? "universal"
+
+    # Statically link with zlib.
+    ENV.append "LDFLAGS", "-L#{zlib.opt_lib}" unless OS.mac?
 
     # Git Makefile doesn't support to link static libcurl.
     inreplace "Makefile", "$(CURL_LIBCURL)", `#{curl.opt_bin/"curl-config"} --static-libs`.chomp
