@@ -3,6 +3,7 @@ FROM centos:centos5
 MAINTAINER Homebrew Maintainers <homebrew-discuss@googlegroups.com>
 
 RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+RUN yum update ca-certificates
 RUN yum groupinstall 'Development Tools' -y
 RUN yum install sudo vim-enhanced which curl git -y
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
