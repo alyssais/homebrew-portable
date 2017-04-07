@@ -54,7 +54,13 @@ class PortableOpenssl < PortableFormula
       enable-cms
     ]
 
-    args << "no-asm" if OS.mac? && MacOS.version < :leopard
+    if OS.mac?
+      args << "no-asm" if MacOS.version < :leopard
+      args << "zlib-dynamic"
+    else
+      args << "-L#{Formula["portable-zlib"].opt_prefix/"lib"}"
+      args << "zlib"
+    end
 
     args
   end
@@ -114,10 +120,22 @@ class PortableOpenssl < PortableFormula
       (include/"openssl/opensslconf.h").atomic_write confs.join("\n")
     end
 
+    if OS.linux?
+      # Since we build openssl which statically links to zlib on Linux,
+      # any program links to the openssl will have to link to zlib as well.
+      inreplace Dir["#{lib}/pkgconfig/lib*.pc"],
+        /(Libs: .*)/, "\\1 -L#{Formula["portable-zlib"].opt_prefix/"lib"} -lz"
+    end
+
     cacert = resource("cacert")
     filename = Pathname.new(cacert.url).basename
     openssldir.install cacert.files(filename => "cert.pem")
   end
+
+  test do
+    cp_r Dir["#{prefix}/*"], testpath
+    input = "x\x9CK\xCB\xCF\a\x00\x02\x82\x01E"
+    assert_equal "foo", pipe_output("#{testpath}/bin/openssl zlib -d", input)
   end
 
   test do
